@@ -1,0 +1,18 @@
+clc;
+close all;
+clear all;
+K=3;
+G1=5;
+G2=7;
+msg=[1 0 1 1 0 0 1 0];
+received_codeword = [1 1 0 1 1 1 1 1 1 0];
+trel=poly2trellis(K,[G1 G2]);
+disp('message sequence:');
+disp(msg);
+encoded_message=convenc(msg,trel);
+disp('Encoded Message:');
+disp(encoded_message);
+r=length(msg);
+decoded_codeword=vitdec(received_codeword,trel,K,'trunc','hard');
+disp('Decoded Codeword:');
+disp(decoded_codeword);

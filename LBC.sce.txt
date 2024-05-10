@@ -1,0 +1,52 @@
+clc;
+clear;
+k=input('Enter number of message bit');
+n=input('Enter number of code words');
+P=input('Enter the parity matrix');
+disp('Parity matrix',P);
+G=[eye(k,k),P];
+disp('Generator matrix',G);
+H=[P;eye(n-k,n-k)]';
+disp('Parity check matrix',H);
+All_M=input('Enter the message bits');
+CodedMat=All_M*G;
+CodedMat=modulo(CodedMat,2);
+b_matrix=dec2bin(CodedMat);
+disp('Codewords Matrix',CodedMat);
+HamDist=sum(CodedMat,'c');
+disp('Hamming distance',HamDist);
+[row,col]=find(HamDist==0);
+HamDist(row,:)=[];
+MinHamDist=min(HamDist);
+disp('Minimum non zero Hamming Distance',MinHamDist);
+ErrDetCap=MinHamDist-1;
+disp('Error Detection Capability',ErrDetCap);
+ErrDetCap=(MinHamDist-1)/2;
+disp('Error Correction Capability',ErrDetCap);
+R=input('Enter recevied message');
+ErrPos=modulo(round(8*rand()),8);
+disp('Received codeword R',R);
+S=R*H';
+S=modulo(S,2);
+disp('Syndrome Matrix R*H(transpose)',S);
+if S==[0 0 0] then
+    disp('Received Code without error', R);
+    disp('Received Information Message', R(4:7));
+else
+    ErrPos=1;
+    d=[H(:,ErrPos)]';
+    while (d(1)~=S(1))|(d(2)~=S(2))|(d(3)~=S(3)) do
+        ErrPos=ErrPos+1;
+        d=[H(:,ErrPos)]';
+    end
+    disp('Erroneous Bit Pattern',ErrPos);
+    if R(ErrPos)==0 then
+        R(ErrPos)=1;
+        disp('Received Code with error corrected',R);
+        disp('Received Information Message',R(4:7));
+    else
+        R(ErrPos)=0;
+        disp('Received Code with error corrected',R);
+        disp('Received Information Message',R(4:7));
+    end
+end

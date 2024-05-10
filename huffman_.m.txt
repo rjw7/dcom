@@ -1,0 +1,10 @@
+symbols={'A','E','H','N','G'};
+prob=[0.19,0.15,0.2,0.16,0.3];
+x=huffmandict(symbols,prob);
+display(x);
+
+y=huffmanenco(symbols,x);
+display(y);
+
+k=huffmandeco(y,x);
+display(k);
